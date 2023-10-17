@@ -13,140 +13,304 @@ public partial class AssessmentsContext : DbContext
     {
     }
 
-    public virtual DbSet<Assessment> Assessments { get; set; }
+    public virtual DbSet<assessment> assessments { get; set; }
 
-    public virtual DbSet<AssessmentAnswer> AssessmentAnswers { get; set; }
+    public virtual DbSet<assessment_answer> assessment_answers { get; set; }
 
-    public virtual DbSet<AssessmentEnrol> AssessmentEnrols { get; set; }
+    public virtual DbSet<assessment_datum> assessment_data { get; set; }
 
-    public virtual DbSet<AssessmentMatch> AssessmentMatches { get; set; }
+    public virtual DbSet<assessment_department> assessment_departments { get; set; }
 
-    public virtual DbSet<AssessmentOption> AssessmentOptions { get; set; }
+    public virtual DbSet<assessment_enrol> assessment_enrols { get; set; }
 
-    public virtual DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
+    public virtual DbSet<assessment_match> assessment_matches { get; set; }
 
-    public virtual DbSet<AssessmentQuestionsRelation> AssessmentQuestionsRelations { get; set; }
+    public virtual DbSet<assessment_metum> assessment_meta { get; set; }
 
-    public virtual DbSet<AssessmentText> AssessmentTexts { get; set; }
+    public virtual DbSet<assessment_option> assessment_options { get; set; }
 
-    public virtual DbSet<AssessmentTrueFalse> AssessmentTrueFalses { get; set; }
+    public virtual DbSet<assessment_question> assessment_questions { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<assessment_questions_relation> assessment_questions_relations { get; set; }
+
+    public virtual DbSet<assessment_section> assessment_sections { get; set; }
+
+    public virtual DbSet<assessment_text> assessment_texts { get; set; }
+
+    public virtual DbSet<assessment_true_false> assessment_true_falses { get; set; }
+
+    public virtual DbSet<user> users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Assessment>(entity =>
+        modelBuilder.Entity<assessment>(entity =>
         {
-            entity.HasKey(e => e.assessment_id).HasName("PK__Assessme__00B98C265C9D7E88");
+            entity.HasKey(e => e.id).HasName("PK__assessme__3213E83F22683AEC");
 
-            entity.Property(e => e.title).HasMaxLength(255);
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.description).HasColumnType("text");
+            entity.Property(e => e.duration).HasDefaultValueSql("('7')");
+            entity.Property(e => e.published).HasDefaultValueSql("('1')");
+            entity.Property(e => e.short_description).HasColumnType("text");
+            entity.Property(e => e.slug)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.thumbnail)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.title)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<AssessmentAnswer>(entity =>
+        modelBuilder.Entity<assessment_answer>(entity =>
         {
-            entity.HasKey(e => e.answer_id).HasName("PK__Assessme__33724318595387DF");
+            entity.Property(e => e.answer)
+                .IsRequired()
+                .HasColumnType("text");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.score).HasDefaultValueSql("('0')");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
 
-            entity.HasOne(d => d.question).WithMany(p => p.AssessmentAnswers)
-                .HasForeignKey(d => d.question_id)
-                .HasConstraintName("FK__Assessmen__quest__5812160E");
-
-            entity.HasOne(d => d.user).WithMany(p => p.AssessmentAnswers)
-                .HasForeignKey(d => d.userid)
-                .HasConstraintName("FK__Assessmen__useri__571DF1D5");
-        });
-
-        modelBuilder.Entity<AssessmentEnrol>(entity =>
-        {
-            entity.HasKey(e => e.enrol_id).HasName("PK__Assessme__167C5B8F629E3F58");
-
-            entity.Property(e => e.enrolment_date).HasColumnType("datetime");
-
-            entity.HasOne(d => d.assessment).WithMany(p => p.AssessmentEnrols)
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_answers)
                 .HasForeignKey(d => d.assessment_id)
-                .HasConstraintName("FK__Assessmen__asses__37A5467C");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_answers_assessments");
 
-            entity.HasOne(d => d.user).WithMany(p => p.AssessmentEnrols)
-                .HasForeignKey(d => d.userid)
-                .HasConstraintName("FK__Assessmen__useri__36B12243");
-        });
-
-        modelBuilder.Entity<AssessmentMatch>(entity =>
-        {
-            entity.HasKey(e => e.match_id).HasName("PK__Assessme__9D7FCBA37BD176EC");
-
-            entity.ToTable("AssessmentMatch");
-
-            entity.HasOne(d => d.question).WithMany(p => p.AssessmentMatches)
+            entity.HasOne(d => d.question).WithMany(p => p.assessment_answers)
                 .HasForeignKey(d => d.question_id)
-                .HasConstraintName("FK__Assessmen__quest__4BAC3F29");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_answers_assessment_questions");
+
+            entity.HasOne(d => d.user).WithMany(p => p.assessment_answers)
+                .HasForeignKey(d => d.user_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_answers_users");
         });
 
-        modelBuilder.Entity<AssessmentOption>(entity =>
+        modelBuilder.Entity<assessment_datum>(entity =>
         {
-            entity.HasKey(e => e.option_id).HasName("PK__Assessme__F4EACE1B5ACA38A7");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.data).HasColumnType("text");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
 
-            entity.HasOne(d => d.question).WithMany(p => p.AssessmentOptions)
-                .HasForeignKey(d => d.question_id)
-                .HasConstraintName("FK__Assessmen__quest__4E88ABD4");
-        });
-
-        modelBuilder.Entity<AssessmentQuestion>(entity =>
-        {
-            entity.HasKey(e => e.question_id).HasName("PK__Assessme__2EC215492541BCDE");
-
-            entity.Property(e => e.question_type).HasMaxLength(50);
-
-            entity.HasOne(d => d.assessment).WithMany(p => p.AssessmentQuestions)
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_data)
                 .HasForeignKey(d => d.assessment_id)
-                .HasConstraintName("FK__Assessmen__asses__44FF419A");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_data_assessments");
         });
 
-        modelBuilder.Entity<AssessmentQuestionsRelation>(entity =>
+        modelBuilder.Entity<assessment_department>(entity =>
         {
-            entity.HasKey(e => e.relation_id).HasName("PK__Assessme__C409F323D3882872");
+            entity.ToTable("assessment_department");
 
-            entity.ToTable("AssessmentQuestionsRelation");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
 
-            entity.Property(e => e.relation_type).HasMaxLength(50);
-
-            entity.HasOne(d => d.child_question).WithMany(p => p.AssessmentQuestionsRelationchild_questions)
-                .HasForeignKey(d => d.child_question_id)
-                .HasConstraintName("FK__Assessmen__child__48CFD27E");
-
-            entity.HasOne(d => d.parent_question).WithMany(p => p.AssessmentQuestionsRelationparent_questions)
-                .HasForeignKey(d => d.parent_question_id)
-                .HasConstraintName("FK__Assessmen__paren__47DBAE45");
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_departments)
+                .HasForeignKey(d => d.assessment_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_department_assessments");
         });
 
-        modelBuilder.Entity<AssessmentText>(entity =>
+        modelBuilder.Entity<assessment_enrol>(entity =>
         {
-            entity.HasKey(e => e.text_id).HasName("PK__Assessme__E2597D5FA60116FD");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.score).HasDefaultValueSql("('0')");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
 
-            entity.ToTable("AssessmentText");
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_enrols)
+                .HasForeignKey(d => d.assessment_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_enrols_assessments");
 
-            entity.HasOne(d => d.question).WithMany(p => p.AssessmentTexts)
+            entity.HasOne(d => d.user).WithMany(p => p.assessment_enrols)
+                .HasForeignKey(d => d.user_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_enrols_users");
+        });
+
+        modelBuilder.Entity<assessment_match>(entity =>
+        {
+            entity.ToTable("assessment_match");
+
+            entity.HasIndex(e => e.answer_id_key, "IX_assessment_match").IsUnique();
+
+            entity.HasIndex(e => e.question_id_key, "IX_assessment_match_1").IsUnique();
+
+            entity.Property(e => e.answer).HasColumnType("text");
+            entity.Property(e => e.answer_id_key)
+                .IsRequired()
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.option).HasColumnType("text");
+            entity.Property(e => e.order).HasDefaultValueSql("('0')");
+            entity.Property(e => e.question_id_key)
+                .IsRequired()
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+
+            entity.HasOne(d => d.question).WithMany(p => p.assessment_matches)
                 .HasForeignKey(d => d.question_id)
-                .HasConstraintName("FK__Assessmen__quest__5165187F");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_match_assessment_questions");
         });
 
-        modelBuilder.Entity<AssessmentTrueFalse>(entity =>
+        modelBuilder.Entity<assessment_metum>(entity =>
         {
-            entity.HasKey(e => e.true_false_id).HasName("PK__Assessme__8A9FAFD0B094A75E");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.type).HasColumnType("text");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+            entity.Property(e => e.value).HasColumnType("text");
 
-            entity.ToTable("AssessmentTrueFalse");
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_meta)
+                .HasForeignKey(d => d.assessment_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_meta_assessments");
+        });
 
-            entity.HasOne(d => d.question).WithMany(p => p.AssessmentTrueFalses)
+        modelBuilder.Entity<assessment_option>(entity =>
+        {
+            entity.Property(e => e.correct).HasDefaultValueSql("('0')");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.option).HasColumnType("text");
+            entity.Property(e => e.order).HasDefaultValueSql("('0')");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+
+            entity.HasOne(d => d.question).WithMany(p => p.assessment_options)
                 .HasForeignKey(d => d.question_id)
-                .HasConstraintName("FK__Assessmen__quest__5441852A");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_options_assessment_questions");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<assessment_question>(entity =>
         {
-            entity.HasKey(e => e.userid).HasName("PK__Users__CBA1B2573902473C");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.level).HasDefaultValueSql("('0')");
+            entity.Property(e => e.order).HasDefaultValueSql("('0')");
+            entity.Property(e => e.question).HasColumnType("text");
+            entity.Property(e => e.type).HasColumnType("text");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+        });
 
-            entity.Property(e => e.email).HasMaxLength(255);
-            entity.Property(e => e.password).HasMaxLength(255);
-            entity.Property(e => e.username).HasMaxLength(255);
+        modelBuilder.Entity<assessment_questions_relation>(entity =>
+        {
+            entity.ToTable("assessment_questions_relation");
+
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_questions_relations)
+                .HasForeignKey(d => d.assessment_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_questions_relation_assessments");
+
+            entity.HasOne(d => d.question).WithMany(p => p.assessment_questions_relations)
+                .HasForeignKey(d => d.question_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_questions_relation_assessment_questions");
+        });
+
+        modelBuilder.Entity<assessment_section>(entity =>
+        {
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.description).HasColumnType("text");
+            entity.Property(e => e.order).HasDefaultValueSql("('0')");
+            entity.Property(e => e.title)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+
+            entity.HasOne(d => d.assessment).WithMany(p => p.assessment_sections)
+                .HasForeignKey(d => d.assessment_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_sections_assessments");
+        });
+
+        modelBuilder.Entity<assessment_text>(entity =>
+        {
+            entity.ToTable("assessment_text");
+
+            entity.Property(e => e.answer).HasColumnType("text");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.order).HasDefaultValueSql("('0')");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+
+            entity.HasOne(d => d.question).WithMany(p => p.assessment_texts)
+                .HasForeignKey(d => d.question_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_text_assessment_questions");
+        });
+
+        modelBuilder.Entity<assessment_true_false>(entity =>
+        {
+            entity.ToTable("assessment_true_false");
+
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.is_true).HasDefaultValueSql("('0')");
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+
+            entity.HasOne(d => d.question).WithMany(p => p.assessment_true_falses)
+                .HasForeignKey(d => d.question_id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assessment_true_false_assessment_questions");
+        });
+
+        modelBuilder.Entity<user>(entity =>
+        {
+            entity.Property(e => e.api_key)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.confirm_code)
+                .IsRequired()
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.confirmed_at).HasColumnType("datetime");
+            entity.Property(e => e.created_at).HasColumnType("datetime");
+            entity.Property(e => e.deleted_at).HasColumnType("datetime");
+            entity.Property(e => e.display_name)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.email)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.first_name)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.is_banned).HasDefaultValueSql("('0')");
+            entity.Property(e => e.is_ldap).HasDefaultValueSql("('0')");
+            entity.Property(e => e.is_verified).HasDefaultValueSql("('0')");
+            entity.Property(e => e.last_name)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.otp)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.otp_created_at).HasColumnType("datetime");
+            entity.Property(e => e.password)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.password_changed_at).HasColumnType("datetime");
+            entity.Property(e => e.remember_token)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.updated_at).HasColumnType("datetime");
+            entity.Property(e => e.user_url)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.username)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);

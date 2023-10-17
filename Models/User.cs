@@ -5,17 +5,57 @@ using System.Collections.Generic;
 
 namespace GetAsessmentAnswers.Models;
 
-public partial class User
+public partial class user
 {
-    public int userid { get; set; }
+    public long id { get; set; }
+
+    public string api_key { get; set; }
 
     public string username { get; set; }
 
-    public string email { get; set; }
-
     public string password { get; set; }
 
-    public virtual ICollection<AssessmentAnswer> AssessmentAnswers { get; set; } = new List<AssessmentAnswer>();
+    public string first_name { get; set; }
 
-    public virtual ICollection<AssessmentEnrol> AssessmentEnrols { get; set; } = new List<AssessmentEnrol>();
+    public string last_name { get; set; }
+
+    public string email { get; set; }
+
+    public byte is_banned { get; set; }
+
+    public byte is_verified { get; set; }
+
+    public string confirm_code { get; set; }
+
+    public DateTime? confirmed_at { get; set; }
+
+    public DateTime? password_changed_at { get; set; }
+
+    public string display_name { get; set; }
+
+    public string user_url { get; set; }
+
+    public byte is_ldap { get; set; }
+
+    public long created_by { get; set; }
+
+    public long updated_by { get; set; }
+
+    public string remember_token { get; set; }
+
+    public DateTime? created_at { get; set; }
+
+    public DateTime? updated_at { get; set; }
+
+    public DateTime? deleted_at { get; set; }
+
+    public string otp { get; set; }
+
+    public DateTime? otp_created_at { get; set; }
+
+    public long? profile_picture_id { get; set; }
+
+    public virtual ICollection<assessment_answer> assessment_answers { get; set; } = new List<assessment_answer>();
+
+    public virtual ICollection<assessment_enrol> assessment_enrols { get; set; } = new List<assessment_enrol>();
 }

@@ -16,47 +16,63 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[AssessmentAnswers]",
+         "Name": "[dbo].[assessment_answers]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentEnrols]",
+         "Name": "[dbo].[assessment_data]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentMatch]",
+         "Name": "[dbo].[assessment_department]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentOptions]",
+         "Name": "[dbo].[assessment_enrols]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentQuestions]",
+         "Name": "[dbo].[assessment_match]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentQuestionsRelation]",
+         "Name": "[dbo].[assessment_meta]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Assessments]",
+         "Name": "[dbo].[assessment_options]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentText]",
+         "Name": "[dbo].[assessment_questions]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AssessmentTrueFalse]",
+         "Name": "[dbo].[assessment_questions_relation]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Users]",
+         "Name": "[dbo].[assessment_sections]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[assessment_text]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[assessment_true_false]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[assessments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[users]",
          "ObjectType": 0
       }
    ],
-   "UiHint": "desktop-uqgn4re.Assessments.dbo",
+   "UiHint": "desktop-uqgn4re\\sql2019.edulms.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
