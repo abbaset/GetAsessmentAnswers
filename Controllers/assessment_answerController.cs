@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GetAsessmentAnswers.Models;
+using System.Net;
 
 namespace GetAsessmentAnswers.Controllers
 {
@@ -20,34 +21,62 @@ namespace GetAsessmentAnswers.Controllers
             _context = context;
         }
 
-        // GET: api/assessment_answer
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<assessment_answer>>> Getassessment_answers()
+        [HttpGet("{type}")]
+        public IActionResult Getassessment(string type)
         {
-          if (_context.assessment_answers == null)
-          {
-              return NotFound();
-          }
-            return await _context.assessment_answers.ToListAsync();
-        }
+            if (_context.assessment_questions == null)
+            {
+                return NotFound();
+            }
+          
 
-        // GET: api/assessment_answer/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<assessment_answer>> Getassessment_answer(long id)
-        {
-          if (_context.assessment_answers == null)
-          {
-              return NotFound();
-          }
-            var assessment_answer = await _context.assessment_answers.FindAsync(id);
+            var assessment_answer = (from aa in _context.assessment_questions
+                                     join bb in _context.assessment_answers on aa.id equals bb.question_id
+                                     join cc in _context.assessments on bb.assessment_id equals cc.id
+                                     where aa.type == type
+                                     select new { AssessmentID = cc.id, cc.title, cc.short_description, aa.question, aa.type, bb.answer }
+                 ).ToList();
+
 
             if (assessment_answer == null)
             {
                 return NotFound();
             }
 
-            return assessment_answer;
+            return Ok(assessment_answer);
+
         }
+        //// GET: api/assessment_answer
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<assessment_answer>>> Getassessment_answers()
+        //{
+        //  if (_context.assessment_answers == null)
+        //  {
+        //      return NotFound();
+        //  }
+        //    return await _context.assessment_answers.ToListAsync();
+        //}
+
+        //// GET: api/assessment_answer/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<assessment_answer>> Getassessment_answer(long id)
+        //{
+        //  if (_context.assessment_answers == null)
+        //  {
+        //      return NotFound();
+        //  }
+        //    var assessment_answer = await _context.assessment_answers.FindAsync(id);
+
+        //    if (assessment_answer == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return assessment_answer;
+        //}
+
+
+
 
 
         // POST: api/assessment_answer
